@@ -1,0 +1,16 @@
+<div class="row bg-info" style="padding:12px; border-radius: 6px 6px 0 0;">
+    <h2>{{ contact.name }}</h2>
+    <div style="display:flex; align-items: center; justify-content: space-between;">
+        <img [src]="contact.imageUrl" alt="{{ contact.name }}">
+        <div style="display: flex; gap: 16px; justify-content: flex-end;">
+            <button class="btn btn-primary" style="margin: auto 0;">Edit</button>
+            <button class="btn btn-danger" style="margin: auto 0;">Delete</button>
+        </div>
+    </div>
+</div>
+<div class="row" style="padding:12px; border: 2px lightgray solid">
+    <div class="col-xs-12">
+        <h4><strong>Email:</strong> {{ contact.email }}</h4>
+        <h4><strong>Phone:</strong> {{ contact.phone }}</h4>
+    </div>
+</div>
