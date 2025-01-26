@@ -4,11 +4,6 @@
 </div>
 <div class="row" style="padding:12px; border: 2px lightgray solid">
     <div class="col-xs-12">
-        <a href="#" class="list-group-item clearfix" *ngFor="let contact of contacts">
-            <h3 class="pull-left">{{ contact.name }}</h3>
-            <span class="pull-right">
-                <img [src]="contact.imageUrl" alt="{{ contact.name }}">
-            </span>
-        </a>
+        <app-contact-item *ngFor="let contactInfo of contacts" [contact]="contactInfo" (click)="onSelected(contactInfo)"></app-contact-item>
     </div>
 </div>
