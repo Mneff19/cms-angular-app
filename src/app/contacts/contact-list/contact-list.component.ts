@@ -29,7 +29,6 @@ export class ContactListComponent {
   @Output() selectedContactEvent = new EventEmitter<Contact>();
 
   onSelected(contact: Contact) {
-    console.log(contact)
     this.selectedContactEvent.emit(contact);
   };
 }

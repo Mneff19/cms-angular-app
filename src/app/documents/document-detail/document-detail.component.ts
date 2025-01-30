@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Document } from '../documents.model';
 
 @Component({
@@ -7,5 +7,5 @@ import { Document } from '../documents.model';
   styleUrl: './document-detail.component.css'
 })
 export class DocumentDetailComponent {
-  document : Document;
+  @Input() document : Document;
 }
