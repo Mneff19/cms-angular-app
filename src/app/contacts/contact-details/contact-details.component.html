@@ -3,8 +3,8 @@
     <div style="display:flex; align-items: center; justify-content: space-between;">
         <img [src]="contact.imageUrl" alt="{{ contact.name }}">
         <div style="display: flex; gap: 16px; justify-content: flex-end;">
-            <button class="btn btn-primary" style="margin: auto 0;">Edit</button>
-            <button class="btn btn-danger" style="margin: auto 0;">Delete</button>
+            <a [routerLink]="['/contacts', contact.id, 'edit']" class="btn btn-primary" style="margin: auto 0;">Edit</a>
+            <a class="btn btn-danger" style="margin: auto 0;" (click)="onDelete()">Delete</a>
         </div>
     </div>
 </div>

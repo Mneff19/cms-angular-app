@@ -1,9 +1,9 @@
 <div class="row bg-info" style="padding:12px; border-radius: 6px 6px 0 0;">
     <h2 class="pull-left" style="margin:0">Contacts</h2>
-    <button class="pull-right btn btn-success">New Contact</button>
+    <a routerLink="new" class="pull-right btn btn-success">New Contact</a>
 </div>
 <div class="row" style="padding:12px; border: 2px lightgray solid">
     <div class="col-xs-12">
-        <app-contact-item *ngFor="let contactInfo of contacts" [contact]="contactInfo" (click)="onSelected(contactInfo)"></app-contact-item>
+        <app-contact-item *ngFor="let contactInfo of contacts" [contact]="contactInfo" routerLinkActive="active"></app-contact-item>
     </div>
 </div>
