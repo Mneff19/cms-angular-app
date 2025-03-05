@@ -72,7 +72,7 @@ export class ContactsService {
     if (pos < 0) {
       return;
     }
-    alert("AHHH")
+    
     newContact.id = originalContact.id;
     this.contacts[pos] = newContact;
     this.contactListChangedEvent.next(this.contacts.slice());
