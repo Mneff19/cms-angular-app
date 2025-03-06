@@ -2,6 +2,7 @@ import { Injectable, EventEmitter, Output } from '@angular/core';
 import { Document } from './documents.model';
 import { MOCKDOCUMENTS } from './MOCKDOCUMENTS';
 import { Subject } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class DocumentsService {
   documents: Document[] = [];
   maxDocumentId: number;
 
-  constructor() { 
+  constructor(private http: HttpClient) { 
     this.documents = MOCKDOCUMENTS;
     this.maxDocumentId = this.getMaxId();
   }
@@ -30,6 +31,17 @@ export class DocumentsService {
   }
 
   getDocuments(): Document[] {
+    this.http.get<Document[]>('https://contact-angular-app-default-rtdb.firebaseio.com/documents.json').subscribe(
+      (documents: Document[]) => {
+        this.documents = documents;
+        this.maxDocumentId = this.getMaxId();
+        this.documents.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
+        this.documentListChangedEvent.next(this.documents.slice());
+      },
+      (error: any) => {
+      console.error(error);
+      }
+    );
     return this.documents.slice();
   }
 
@@ -49,7 +61,7 @@ export class DocumentsService {
     this.maxDocumentId++;
     newDocument.id = this.maxDocumentId.toString();
     this.documents.push(newDocument);
-    this.documentListChangedEvent.next(this.documents.slice());
+    this.storeDocuments();
   }
 
   updateDocument(originalDocument: Document, newDocument: Document) {
@@ -62,7 +74,7 @@ export class DocumentsService {
     }
     newDocument.id = originalDocument.id;
     this.documents[pos] = newDocument;
-    this.documentListChangedEvent.next(this.documents.slice());
+    this.storeDocuments();
   }
 
   deleteDocument(document: Document) {
@@ -74,6 +86,18 @@ export class DocumentsService {
       return;
     }
     this.documents.splice(pos, 1);
-    this.documentListChangedEvent.next(this.documents.slice());
+    this.storeDocuments();
+  }
+
+  storeDocuments() {
+    let documents = JSON.stringify(this.documents);
+    let httpHeaders = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    this.http.put('https://contact-angular-app-default-rtdb.firebaseio.com/documents.json', documents, {headers: httpHeaders}).subscribe(
+      () => {
+        this.documentListChangedEvent.next(this.documents.slice());
+      }
+    );
   }
 }
