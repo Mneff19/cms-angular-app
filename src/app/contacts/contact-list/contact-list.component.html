@@ -1,9 +1,15 @@
 <div class="row bg-info" style="padding:12px; border-radius: 6px 6px 0 0;">
-    <h2 class="pull-left" style="margin:0">Contacts</h2>
-    <a routerLink="new" class="pull-right btn btn-success">New Contact</a>
+                    <h2 class="title" style="margin-top:0px">Contacts</h2>
+                    <div class="input-group pull-left col-xs-7">
+                    <input type="text" class="form-control" placeholder="Enter a search value" #searchBox (keyup)="search(searchBox.value)">
+                    <div class="glyphicon glyphicon-search input-group-addon" (click)="search(searchBox.value)"></div>
+                    </div>
+                    <div class="pull-right">
+                    <a class="btn btn-success" [routerLink]="['new']">New Contact</a>
+                    </div>
 </div>
 <div class="row" style="padding:12px; border: 2px lightgray solid">
     <div class="col-xs-12">
-        <app-contact-item *ngFor="let contactInfo of contacts" [contact]="contactInfo" routerLinkActive="active"></app-contact-item>
+        <app-contact-item *ngFor="let contactInfo of contacts | contactsFilter:term" [contact]="contactInfo" routerLinkActive="active"></app-contact-item>
     </div>
 </div>
