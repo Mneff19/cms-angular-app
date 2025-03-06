@@ -39,7 +39,7 @@ export class DocumentsService {
         this.documentListChangedEvent.next(this.documents.slice());
       },
       (error: any) => {
-      console.error(error);
+        console.error(error);
       }
     );
     return this.documents.slice();
