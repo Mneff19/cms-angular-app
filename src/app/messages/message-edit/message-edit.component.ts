@@ -9,7 +9,7 @@ import { MessagesService } from '../messages.service';
   styleUrl: './message-edit.component.css'
 })
 export class MessageEditComponent {
-  currentSender = 'Matthew Neff';
+  currentSender = '3';
   @Output() addMessageEvent: EventEmitter<Message> = new EventEmitter<Message>();
   @ViewChild('subject') subjectInputRef: ElementRef;
   @ViewChild('msgText') msgTextInputRef: ElementRef;
