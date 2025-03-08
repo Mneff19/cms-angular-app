@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "course-project-starting-project": {
+    "cms": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/course-project-starting-project",
+            "outputPath": "dist/cms",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -68,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "course-project-starting-project:build:production"
+              "buildTarget": "cms:build:production"
             },
             "development": {
-              "buildTarget": "course-project-starting-project:build:development"
+              "buildTarget": "cms:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,7 +79,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "course-project-starting-project:build"
+            "buildTarget": "cms:build"
           }
         },
         "test": {
