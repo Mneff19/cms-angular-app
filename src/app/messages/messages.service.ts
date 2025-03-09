@@ -21,10 +21,15 @@ export class MessagesService {
     if (!message) {
       return;
     }
-    this.maxMessageId++;
-    message.id = this.maxMessageId.toString();
-    this.messages.push(message);
-    this.storeMessages();
+
+    message.id = '';
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    this.http.post<{message: string, newMessage: Message}>('http://localhost:3000/messages', message, {headers: headers}).subscribe(
+      ({message, newMessage}) => {
+        this.messages.push(newMessage);
+        this.send();
+      }
+    );
   }
 
   getMaxId(): number {
@@ -39,10 +44,11 @@ export class MessagesService {
   }
 
   getMessages(): Message[] {
-    this.http.get<Message[]>('https://contact-angular-app-default-rtdb.firebaseio.com/messages.json').subscribe(
-      (messages: Message[]) => {
+    this.http.get<{message: string, messages: Message[]}>('http://localhost:3000/messages').subscribe(
+      ({message, messages}) => {
         this.messages = messages;
-        this.messageChangedEvent.next(this.messages.slice());
+        this.maxMessageId = this.getMaxId();
+        this.send();
       },
       (error: any) => {
         console.error(error);
@@ -60,15 +66,7 @@ export class MessagesService {
     return null;
   }
 
-  storeMessages() {
-    let messages = JSON.stringify(this.messages);
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    this.http.put('https://contact-angular-app-default-rtdb.firebaseio.com/messages.json', messages, { headers: headers }).subscribe(
-      () => {
-        this.messageChangedEvent.next(this.messages.slice());
-      }
-    );
+  send() {
+    this.messageChangedEvent.next(this.messages.slice());
   }
 }

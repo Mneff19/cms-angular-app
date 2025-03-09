@@ -20,12 +20,11 @@ export class ContactsService {
   }
 
   getContacts(): Contact[] {
-    this.http.get<Contact[]>('https://contact-angular-app-default-rtdb.firebaseio.com/contacts.json').subscribe(
-      (contacts: Contact[]) => {
+    this.http.get<{message: string, contacts: Contact[]}>('http://localhost:3000/contacts').subscribe(
+      ({message, contacts}) => {
         this.contacts = contacts;
         this.maxContactId = this.getMaxId();
-        this.contacts.sort((a, b) => a.name > b.name ? 1 : b.name > a.name ? -1 : 0);
-        this.contactListChangedEvent.next(this.contacts.slice());
+        this.send();
       },
       (error: any) => {
         console.error(error);
@@ -47,12 +46,17 @@ export class ContactsService {
     if (!contact) {
       return;
     }
-    const pos = this.contacts.indexOf(contact);
+    const pos = this.contacts.findIndex(c => c.id === contact.id);
     if (pos < 0) {
       return;
     }
-    this.contacts.splice(pos, 1);
-    this.storeContacts();
+
+    this.http.delete('http://localhost:3000/contacts/' + contact.id).subscribe(
+      (response: Response) => {
+        this.contacts.splice(pos, 1);
+        this.send();
+      }
+    );
   }
 
   getMaxId(): number {
@@ -66,14 +70,19 @@ export class ContactsService {
     return maxId;
   }
 
-  addContact(newContact: Contact) {
-    if (!newContact) {
+  addContact(contact: Contact) {
+    if (!contact) {
       return;
     }
-    this.maxContactId++;
-    newContact.id = this.maxContactId.toString();
-    this.contacts.push(newContact);
-    this.storeContacts();
+
+    contact.id = '';
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    this.http.post<{message: string, contact: Contact}>('http://localhost:3000/contacts', contact, {headers: headers}).subscribe(
+      ({message, contact}) => {
+        this.contacts.push(contact);
+        this.send();
+      }
+    );
   }
 
   updateContact(originalContact: Contact, newContact: Contact) {
@@ -84,21 +93,17 @@ export class ContactsService {
     if (pos < 0) {
       return;
     }
-    
     newContact.id = originalContact.id;
-    this.contacts[pos] = newContact;
-    this.storeContacts();
-  }
-
-  storeContacts() {
-    let contacts = JSON.stringify(this.contacts);
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    this.http.put('https://contact-angular-app-default-rtdb.firebaseio.com/contacts.json', contacts, { headers: headers }).subscribe(
-      () => {
-        this.contactListChangedEvent.next(this.contacts.slice());
+    const headers = new HttpHeaders({'Content-Type': 'application/json'});
+    this.http.put('http://localhost:3000/contacts/' + originalContact.id, newContact, {headers: headers}).subscribe(
+      (response: Response) => {
+        this.contacts[pos] = newContact;
+        this.send();
       }
     );
+  }
+
+  send() {
+    this.contactListChangedEvent.next(this.contacts.slice());
   }
 }
