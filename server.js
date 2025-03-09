@@ -5,6 +5,7 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const mongoose = require('mongoose');
 
 // import the routing file to handle the default (index) route
 const index = require('./server/routes/app');
@@ -13,6 +14,15 @@ const documents = require('./server/routes/documents');
 const messages = require('./server/routes/messages');
 
 const app = express(); // create an instance of express
+
+// establish a connection to the mongo database
+mongoose.connect('mongodb+srv://fella:CgjRh67gMSmd9Q65@cluster83599.b3ykl.mongodb.net/cms', { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log('Connected to database!');
+  })
+  .catch((err) => {
+    console.log('Connection failed: ' + err);
+  });
 
 // Tell express to use the following parsers for POST data
 app.use(bodyParser.json());
